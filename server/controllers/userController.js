@@ -25,13 +25,20 @@ exports.verifyLogin = async (user) => {
       };
     }
     console.log("acc");
-    const accessToken = auth.generateAccessToken({ username });
-    const refreshToken = auth.generateRefreshToken({ username });
+    const accessToken = auth.generateAccessToken({
+      userId: rows[0].id,
+      username,
+    });
+    const refreshToken = auth.generateRefreshToken({
+      userId: rows[0].id,
+      username,
+    });
 
     return {
       statusCode: 200,
       error: "none",
       message: { accessToken: accessToken, refreshToken: refreshToken },
+      userid: rows.id,
     };
   } catch (err) {
     return {
@@ -57,7 +64,7 @@ exports.signUpUser = async (user) => {
     }
 
     const hashPassword = await bycrpt.hash(password, 10);
-    console.log(hashPassword);
+
     query =
       "INSERT INTO users(username, password, first_name, last_name) VALUES(?,?,?,?)";
 
@@ -67,7 +74,6 @@ exports.signUpUser = async (user) => {
       firstname,
       lastname,
     ]);
-    console.log(result);
     return { statusCode: 200, error: "none", message: "Singin Succesfully" };
   } catch (err) {
     console.error(err);

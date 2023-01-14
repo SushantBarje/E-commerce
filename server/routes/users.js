@@ -5,7 +5,6 @@ var controller = require("../controllers/userController");
 
 router.post("/login", async function (req, res, next) {
   const response = await controller.verifyLogin(req.body);
-  console.log(response);
   res
     .status(response.statusCode)
     .json({ error: response.error, message: response.message });
