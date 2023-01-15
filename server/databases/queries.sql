@@ -44,3 +44,6 @@ update users set users.password = '$2y$10$V5ushMEECBgtqPk4cxV8PecQxk8eM002rF8eRq
 
 INSERT INTO products VALUES(1 , 'MI Y1', 8000.00, 'XIAOMI', './imag', 1); 
 INSERT INTO products VALUES(2 , 'MI Y2', 9000.00, 'XIAOMI', './imag', 1); 
+
+select * from orders;
+desc orders;

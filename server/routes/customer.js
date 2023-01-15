@@ -19,13 +19,18 @@ router.get("/product/:id", auth.verfiyToken, async function (req, res, next) {
     .json({ error: response.error, message: response.message });
 });
 
-router.post("/product/:id/order", auth.verfiyToken, async function (req, res, next) {
-  const response = await customerController.orderProduct(req.params.id, req.user.username);
+router.post("/product/order/:id", auth.verfiyToken, async function (req, res, next) {
+  const response = await customerController.orderProduct(req.params.id, req.user.userId);
   res
     .status(response.statusCode)
     .json({ error: response.error, message: response.message });
 });
 
-router.post("/myorder", auth.verfiyToken, async function (req, res, next) {});
+router.get("/myorder", auth.verfiyToken, async function (req, res, next) {
+    const response = await customerController.getMyOrders(req.user.userId);
+    res
+     .status(response.statusCode)
+     .json({ error: response.error, message: response.message });
+});
 
 module.exports = router;
