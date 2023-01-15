@@ -35,7 +35,7 @@ exports.getProductById = async (id) => {
   }
 };
 
-exports.orderProduct = async (id, user) => {
+exports.orderProduct = async (id, userId) => {
   try {
     var query = "SELECT * from products where product_id = ?";
     var [rows, fields] = await (await connectdb).execute(query, [id]);
@@ -46,24 +46,28 @@ exports.orderProduct = async (id, user) => {
         message: "Product Not found",
       };
     }
-    query = "SELECT id FROM users WHERE username = ?";
-    [rows, fields] = await (await connectdb).execute(query, [user]);
-    if (!rows) {
-      return {
-        statusCode: 402,
-        error: "unauthorized",
-        message: "You are not authorized",
-      };
-    }
-    const userId = rows[0].id;
-    query =
-      "INSERT INTO orders(user, product_id, no_of_units, status) VALUES(?,?,?,?)";
+    query = "INSERT INTO orders(user, product_id, no_of_units, status) VALUES(?,?,?,?)";
     [rows] = await (await connectdb).execute(query, [userId, id, 1, "placed"]);
     return {
       statusCode: 200,
       error: "none",
       message: `Order Placed!\nOrder Id: ${rows.insertId}`,
     };
+  } catch (err) {
+    console.log(err);
+    return {
+      statusCode: 200,
+      error: "none",
+      message: `Internal Server Error: ${err}`,
+    };
+  }
+};
+
+exports.getMyOrders = async (userId) => {
+  try {
+    var query = "SELECT * from orders WHERE user = ?";
+    const [rows, fields] = await (await connectdb).execute(query, [userId]);
+    return { statusCode: 200, error: "none", message: rows };
   } catch (err) {
     console.log(err);
     return {
